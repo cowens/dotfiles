@@ -1,0 +1,73 @@
+#!/usr/bin/env perl
+
+# make the clipboard's contents nice for the tmux status line
+
+use v5.26;
+use List::Util qw/sum/;
+use DateTime;
+use POSIX;
+use warnings;
+
+my %escape = (
+	"\x7f" => "\x{2421}",
+	"#"    => "##",
+);
+
+for my $char (0 .. 0x1f) {
+	$escape{chr $char} = "#[bg=colour76]" . chr($char + 0x2400) . "#[bg=green]";
+}
+
+sub hour { DateTime->now->set_time_zone(shift)->hour }
+
+sub escape {
+	my $s = shift;
+	$s =~ s{
+		( [ \x{00}-\x{1f} \x{23} \x{7f} ] )
+	}{$escape{$1}}gxx;
+	return $s;
+}
+
+sub len {
+	my $s = shift;
+	return 0 unless $s;
+	sum map { ($escape{$_} // "") =~ /#\[bg=colour76]....#\[bg=green]/ ? 2 : 1 } $s =~ /\X/g
+}
+
+binmode STDOUT, ":utf8";
+
+open my $fh, "-|:utf8", "$ENV{HOME}/bin/pbpaste";
+
+local $/;
+my $contents = <$fh>;
+
+my ($status_state, $width) = split /[,\n]/, qx/tmux display-message -p "#{status},#{client_width}"/;
+
+my $reminder  = "";
+my $rem_count = 0;
+my $size      = $width;
+
+if ($status_state eq "on") {
+	$size = 25;
+} else {
+	local $/ = "\n";
+	open my $fh, "<:utf8", "$ENV{HOME}/.rem";
+	if ($fh) {
+		chomp($reminder = <$fh>);
+		$rem_count = len $reminder;
+		$size = $width - $rem_count - 2;
+	}
+	$size -= 19; # for the UTC time
+}
+
+# truncate the clipboard contents
+$contents =~ s/(\X{0,$size}).*/$1/;
+
+my $count = len $contents;
+
+my $out = "\x{AB}$contents\x{BB}" . (" " x ($size - $count));
+unless ($status_state eq "on") {
+	$out .= $reminder;
+	$out .= " " . sprintf "%02d IT %02d UTC %02d PT", map { hour($_) } qw{ Asia/Tel_Aviv UTC America/Los_Angeles };
+}
+
+print escape($out);

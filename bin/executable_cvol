@@ -1,0 +1,27 @@
+#!/bin/zsh
+
+# adjust volume on external display on crab
+
+vol=$1
+
+case "$vol" in
+	100|[0-9][0-9]|[0-9])
+	;;
+	on)
+		vol=50
+	;;
+	unmute)
+		vol=50
+	;;
+	off)
+		vol=0
+	;;
+	mute)
+		vol=0
+	;;
+	*)
+		vol=0
+	;;
+esac
+
+ssh c m1ddc display 2 set volume $vol

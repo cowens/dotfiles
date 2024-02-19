@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+# what to run when tmux asks for a paste
+
+reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer

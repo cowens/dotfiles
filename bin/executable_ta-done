@@ -1,0 +1,82 @@
+#!/usr/bin/perl
+
+use strict;
+use POSIX qw/strftime/;
+use File::Path qw/make_path/;
+use warnings;
+
+my $date_re = qr{(?:(?:....)[-/])?(?:[01]?[0-9])[-/](?:[0-3]?[0-9])};
+my $time_re = qr/(?:[012]?[0-9]):(?:..)(?::(?:..))?/;
+
+my $date = strftime "%Y-%m-%d", localtime;
+my $time = strftime "%H:%M:%S", localtime;
+
+if (($ARGV[0] // "") =~ /^$date_re$/) {
+	my $d = shift;
+	if (10 == length $d) {
+		$date = join '-', map { sprintf "%02d", $_ } split m{[-/]}, $d;
+	} else {
+		$date = join '-', map { sprintf "%02d", $_ } strftime("%Y", localtime), split m{[-/]}, $d;
+	}
+	$time = "?";
+}
+
+if (($ARGV[0] // "") =~ /^$time_re$/) {
+	$time = join ":", map { sprintf "%02d", $_ } split /:/, shift;
+}
+
+unless (@ARGV) {
+	dump_date($date);
+	exit;
+}
+
+if ($ARGV[0] eq "--edit") {
+	my $editor = $ENV{EDITOR} // "vi";
+	$date =~ s{-}{/}g;
+	exec "$editor $ENV{HOME}/.ta_done/$date";
+}
+
+my $ta_done = join " ", @ARGV;
+
+ta_done($date, $time, $ta_done);
+
+sub dump_date {
+	my ($date) = @_;
+
+	my ($y, $m, $d) = split /-/, $date;
+
+	my $path = "$ENV{HOME}/.ta_done/$y";
+	die "$path doesn't exist" unless -d $path;
+	die "$path doesn't exist" unless -d ($path .= "/$m");
+	die "$path doesn't exist" unless -f ($path .= "/$d");
+
+	# if I start using JSON, do sort here
+	open my $fh, "<", $path or die "could not open $path: $!";
+
+	while (my $line = <$fh>) {
+		printf "%-8s %s", split /\t/, $line, 2;
+	}
+}
+
+sub ta_done {
+	my ($date, $time, $ta_done) = @_;
+
+	my ($y, $m, $d) = split /-/, $date;
+	my $path = "$ENV{HOME}/.ta_done/$y/$m";
+
+	make_path $path;
+
+	my $file = "$path/$d";
+
+	# FIXME: this should probably be JSON
+	open my $fh, ">>", $file or die "could not open $file: $!";
+
+	print $fh "$time\t$ta_done\n";
+
+	close $fh;
+
+	system "cat $file | sort > $file.sorted; mv $file.sorted $file";
+}
+
+
+

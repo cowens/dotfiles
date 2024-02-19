@@ -1,0 +1,81 @@
+#!/usr/bin/env perl
+
+use v5.26;
+use warnings;
+
+my $REMINDER_FILE = "$ENV{HOME}/.rem";
+
+sub messages {
+	open my $fh, "<", $REMINDER_FILE or return;
+	return <$fh> if $fh;
+}
+
+sub write_messages {
+	open my $fh, ">", $REMINDER_FILE;
+	print $fh $_ for @_;
+}
+
+sub get_message() {
+	my $message;
+	if (@ARGV) {
+		$message = join(" ", @ARGV) . "\n";
+	} else {
+		$message = <>;
+		unless ($message =~ /\n$/s) {
+			$message .= "\n";
+		}
+	}
+	return $message;
+}
+
+my $cmd = shift // "push";
+
+if ($cmd eq "pop") {
+	my @messages = messages;
+	if (@messages) {
+		shift @messages;
+	}
+	if (@messages) {
+		write_messages @messages;
+	} else {
+		unlink $REMINDER_FILE;
+	}
+	exit 0;
+}
+
+if ($cmd eq "ls") {
+	chomp(my @messages = messages);
+	my $len   = length scalar @messages;
+	my $count = @messages - 1;
+	printf "%${len}d %s\n", $count--, $_ for reverse @messages;
+
+	exit 0;
+}
+
+if ($cmd eq "v") {
+	exec "vi", $REMINDER_FILE;
+}
+
+if ($cmd eq "e") {
+	write_messages messages, get_message;
+	exit 0;
+}
+
+# default is push so if not a valid command then part of the message
+if ($cmd ne "push") {
+	unshift @ARGV, $cmd;
+}
+
+if ($cmd eq "help") {
+	print
+		"help         -- display this list\n",
+		"push message -- push message onto reminders\n",
+		"message      -- the same thing\n",
+		"e message    -- add message to the end of reminders\n",
+		"pop          -- remove top message\n",
+		"ls           -- list messages\n",
+		"v            -- edit messages in vi\n";
+	exit 0;
+}
+
+write_messages get_message, messages;

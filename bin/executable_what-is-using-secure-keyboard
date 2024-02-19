@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+# shows what is currently using the secure keyboard
+# IIRC, I needed this because it was causing problems for screensavers
+
+ioreg -a -l -w 0 | grep -A 1 kCGSSessionSecureInputPID | perl -nle '$h{$1}++ if /<integer>(.*)</}{print for keys %h' | xargs -n 1 ps -fp

@@ -1,0 +1,27 @@
+Host github.com
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/id_ed25519
+	IdentitiesOnly yes
+
+Host p perlish perlish.org
+	ForwardAgent yes
+	AddkeysToAgent yes
+	User cowens
+	Hostname perlish.org
+
+Host crab.local crab c
+	ForwardAgent yes
+	AddkeysToAgent yes
+	User chas.owens
+	Hostname crab.local
+	IdentitiesOnly yes
+	IdentityFile /Users/chas/.ssh/id_ed25519
+
+Host wonkden.duckdns.org wonkden w
+	ForwardAgent yes
+	AddkeysToAgent yes
+	User chas.owens
+	Hostname wonkden.duckdns.org
+	Port 6166
+	IdentityFile /Users/chas/.ssh/id_ed25519

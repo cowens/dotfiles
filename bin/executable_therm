@@ -1,0 +1,35 @@
+#!/bin/zsh
+
+# adjust the office thermostat
+
+zmodload zsh/mathfunc
+
+function f2c {
+	echo $(( floor(($1 - 32) * 100 / 18) / 10 ))
+}
+
+if [[ $# -eq 1 ]]; then
+	low=$( f2c $(($1 - 2)) )
+	high=$( f2c $(($1 + 2)) )
+elif [[ $# -eq 2 && $2 -lt 10 ]]; then
+	low=$( f2c $(($1 - $2)) )
+	high=$( f2c $(($1 + $2)) )
+elif [[ $# -eq 2 ]]; then
+	low=$( f2c $1 )
+	high=$( f2c $2 )
+elif [[ $# -eq 0 ]]; then
+	;
+else
+	echo usage: $0 "[target | low high | target distance]"
+	exit
+fi
+
+token=$(curl -sk -X POST -H 'Content-Type: application/json' https://crab.local:8581/api/auth/login -d "$(gopass -o homebridge/office)" | jq -r .access_token)
+
+id=$(curl -sk https://crab.local:8581/api/accessories -H "Authorization: Bearer $token" | jq -r '.[] | select (.serviceName == "Thermostat Thermostat") | .uniqueId')
+
+curl -sk -X PUT https://crab.local:8581/api/accessories/$id -H "Content-Type:Application/json" -H "authorization: Bearer $token" -d '{"characteristicType": "TargetHeatingCoolingState", "value": "3"}' > /dev/null
+curl -sk -X PUT https://crab.local:8581/api/accessories/$id -H "Content-Type:Application/json" -H "authorization: Bearer $token" -d '{"characteristicType": "CoolingThresholdTemperature", "value": "'$high'"}' > /dev/null
+curl -sk -X PUT https://crab.local:8581/api/accessories/$id -H "Content-Type:Application/json" -H "authorization: Bearer $token" -d '{"characteristicType": "HeatingThresholdTemperature", "value": "'$low'"}' > /dev/null
+
+curl -sk https://crab.local:8581/api/accessories/$id -H 'accept: */*' -H "Authorization: Bearer $token" | jq .values | perl -ple 's{(?<=Temperature": )(.*)}{ int (($1*180/100+32)+.5)}e;'

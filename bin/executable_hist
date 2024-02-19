@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+# I am too lazy to learn the right way to search zsh history
+
+ag --nonumbers --nocolor "(?<!^hist )${(j: :)@}" ~/.zsh_history | perl -nle 'print unless $h{$_}++'

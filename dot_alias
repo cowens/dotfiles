@@ -1,0 +1,16 @@
+alias epwlupdate="(plenv shell 5.26.3; export AWS_PROFILE=prod-developers-oncall; ~/ziprecruiter/bin/secops/update_ep_whitelist.sh)"
+alias nextcal='icalbuddy -b "" -n -ea -li 1 -nrd -iep title,datetime -df "%Y-%m-%d" -tf "%H:%M" -po "datetime,title" -npn -ps "| ||" eventsToday+4'
+alias events='icalbuddy -sed -b "" -n -ea -sd -li 5 -nrd -iep title,datetime -df "%Y-%m-%d" -tf "%H:%M" -po "datetime,title" -npn -ps "| ||" eventsToday+4'
+alias tfs='(cd ~/ziprecruiter; fd "[.]tf$") | xargs ag'
+alias tf='(cd ~/ziprecruiter; fd "[.]tf$")'
+alias bc="bc -l"
+alias ls="ls --color"
+alias imgcat="wezterm imgcat"
+alias slocate="mdfind -name"
+alias wake="ssh w caffeinate -ut 1"
+alias dog=doggo
+
+alias alerts='mysql -h prod-marketplace-reporting-olap.prod-ue1.zipaws.com -D alerts'
+alias analrs='psql --host redshift-analytic.legacy-dev-ue1.zipaws.com --port 5439 -U chas -d prod'
+alias db='mysql -h reporting.prod-ue1.zipaws.com'
+alias prodrs='psql --host redshift.prod-ue1.zipaws.com --port 5439 -U chas -d prod'

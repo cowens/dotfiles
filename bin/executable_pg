@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+# lazy way to grep processes and have the header remain
+
+ps -ef | head -1
+ps -ef | grep $1 | grep -v "pg $1" | grep -v "grep $1"

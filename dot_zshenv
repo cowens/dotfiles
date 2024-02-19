@@ -1,0 +1,27 @@
+
+if [[ -f ~/.alias ]]; then
+	. ~/.alias
+fi
+
+setopt HIST_IGNORE_SPACE # don't record history for commands that start with space
+setopt HIST_FIND_NO_DUPS # don't show dups when searching
+setopt HIST_SAVE_NO_DUPS # don't save dups when rewriting history file
+export HISTFILESIZE=9223372036854775807
+export HISTSIZE=9223372036854775807
+export HISTSAVE=9223372036854775807
+setopt INC_APPEND_HISTORY
+
+export PAGER=less
+# because I always forget:
+# -i  -- ignore case when searching, FIXME: isn't this the default
+# -M  -- make it more verbose, FIXME: do I want this?
+# -S  -- IMPORTANT, this is what prevents line wraps
+# -x4 -- set tabstop to 4, FIXME: maybe 8?
+# -R  -- IMPORTANT, sets to raw so formatting is printed
+# -F  -- quit if it fits one screen
+# -X  -- doesn't send the termcap init string, FIXME: do I need this
+export LESS="-iMS -RFX"
+export EDITOR=vi
+export VISUAL=vi
+
+source ~/.path

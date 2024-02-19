@@ -1,0 +1,213 @@
+set nocompatible
+filetype off
+
+filetype plugin indent on
+
+" set laststatus=2
+" set statusline=%f\ %h%w%m%r%=%-14.(%{&paste?'paste\ ':''}%{&et?'expand\ ':''}%{&ts}t\ %l,%c%V\ u+%04B%)\ %P
+
+
+" setup Perl folding and highlighting options
+"let perl_include_pod     = 1
+"let perl_fold            = 1
+"let perl_nofold_packages = 1
+
+" remembering the line offset should be the norm
+nnoremap ' `
+nnoremap ` '
+
+" deal with ZipRecruiter's insane tab handling
+function! ChangeTabs()
+	if &et
+		set ts=8
+		set sw=8
+		set noet
+	else
+		set ts=2
+		set sw=2
+		set et
+	endif
+endfunction
+
+command Sudow w !sudo tee % >/dev/null
+nmap <silent> <F1> :TComment<CR>
+vmap <silent> <F1> :TComment<CR>
+nmap <silent> <F2> :CtrlPMRUFiles<CR>
+imap <F3> <C-o>:set list!<CR>
+nmap <silent> <f3> :set list!<cr>
+nmap <silent> <f4> :set spell!<cr>
+imap <F4> <C-o>:set spell!<CR>
+nmap <F5> :call ChangeTabs()<CR>
+inoremap jj <Esc>
+
+let mapleader = ","
+let maplocalleader = ","
+nmap <silent> <leader>p :se paste<CR>"*p:se nopaste<CR>
+nmap <Leader>n :tabedit 
+nmap <Leader>v :vsplit 
+nmap <Leader>V :vsplit<CR>
+nmap <Leader>h :split 
+nmap <Leader>H :split<CR>
+nmap <Leader>r :source ~/.vimrc<CR>:echom "config reloaded"<CR>
+
+" easily line up code
+nmap <silent> <Leader>a<Space> :Tabularize / \+/<CR>
+nmap <silent> <Leader>a= :Tabularize /=[>]\@!<CR>
+vmap <silent> <Leader>a= :Tabularize /=[>]\@!<CR>
+nmap <silent> <Leader>a: :Tabularize /:\zs<CR>
+vmap <silent> <Leader>a: :Tabularize /:\zs<CR>
+nmap <silent> <Leader>aj :Tabularize /:.*<CR>
+vmap <silent> <Leader>aj :Tabularize /:.*<CR>
+nmap <silent> <Leader>a>     :Tabularize /=><CR>
+vmap <silent> <Leader>a> :Tabularize /=><CR>
+nmap <silent> <Leader>a, :Tabularize /,\zs<CR>
+vmap <silent> <Leader>a, :Tabularize /,\zs<CR>
+vmap <silent> <Leader>a# :Tabularize /#<CR>
+
+" config buffers so they are visible, can be switched without saving, and
+" navigating them makes sense (to me)
+set hidden
+let g:vem_tabline_show_number = "index"
+nmap <leader>. <Plug>vem_next_buffer-
+nmap <leader>, <C-^>
+nmap <leader>m <Plug>vem_prev_buffer-
+nmap <leader>x <Plug>vem_delete_buffer-
+nmap <leader>1 :VemTablineGo 1<CR>
+nmap <leader>2 :VemTablineGo 2<CR>
+nmap <leader>3 :VemTablineGo 3<CR>
+nmap <leader>4 :VemTablineGo 4<CR>
+nmap <leader>5 :VemTablineGo 5<CR>
+nmap <leader>6 :VemTablineGo 6<CR>
+nmap <leader>7 :VemTablineGo 7<CR>
+nmap <leader>8 :VemTablineGo 8<CR>
+nmap <leader>9 :VemTablineGo 9<CR>
+nmap <leader>0 :VemTablineGo 10<CR>
+
+
+" spelling stuff
+set spell
+highlight PmenuSel ctermfg=black ctermbg=lightgray
+set sps=best,3
+
+autocmd BufNewFile,BufRead *.p6 setf perl6
+au BufRead,BufNewFile *.go set filetype=go nospell
+
+
+
+
+
+au BufNewFile *.go s-^-package main\r\rimport (\r\t"fmt"\r)\r\rfunc main() {\r\r}-
+au BufNewFile *.pm s-^-package XXX;\r\ruse strict;\ruse warnings;\r\r1;-
+au BufNewFile *.pl s-^-#!/usr/bin/perl\r\ruse v5.32;\ruse warnings;\r\r-
+au BufNewFile *.sh s-^-#!/bin/bash\r\r-
+au BufNewFile *.py s-^-#!/usr/bin/python\r\r-
+au BufNewFile *.rb s-^-#!/usr/bin/ruby\r\r-
+au BufNewFile *.c  s-^-#include <stdio.h>\r\rint main(int argc, char** argv) {\r\treturn 0;\r}-
+au BufNewFile *.html  s-^-<!DOCTYPE html>\r<html>\r	<head>\r		<style>\r		</style>\r		<script>\r		</script>\r	</head>\r	<body>\r	</body>\r</html>-
+set noexrc
+
+set nomodeline
+set listchars=tab:⇥·,eol:↵,trail:·
+set regexpengine=2
+
+"set list
+set nocompatible
+"set title
+set wildmenu
+set ttimeout
+set ttimeoutlen=250
+set notimeout
+set backspace=indent,eol,start
+set background=dark
+set backup                       "trying this out
+set backupdir=$HOME/.vim/backup// "test
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set incsearch		" do incremental searching
+set directory=$HOME/.vim/swap// "double slashes means full paths will be used
+set cryptmethod=blowfish2
+"set clipboard=unnamed
+if version >= 703
+	set undofile
+	set undodir=$HOME/.vim/undo
+endif
+
+" Don't use Ex mode, use Q for formatting
+map Q gq
+
+"the mouse is evil
+set mouse=""
+set fillchars=vert:\|,fold:\ 
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+	syntax on
+	if &t_Co > 8
+		colorscheme chas
+		highlight RedundantSpaces term=standout ctermbg=red guibg=red
+		"\ze sets end of match so only spaces highlighted
+		match Error /\v\s+$| +\ze\t/
+		let &colorcolumn=join(range(81,999), ",")
+		highlight ColorColumn ctermbg=233
+		highlight NonText ctermfg=236
+		highlight SpecialKey ctermfg=236
+		"set list
+		" vimdiff stuff
+		highlight DiffAdd      ctermbg=Black
+		highlight DiffChange   ctermbg=Black
+		highlight DiffDelete   ctermbg=Black
+		highlight DiffText     ctermbg=Green ctermfg=16
+		if &diff
+			let s:is_started_as_vim_diff = 1
+			syntax off
+			set nospell
+		endif
+	else
+		highlight LineNr     ctermfg=Black ctermbg=LightGray
+		highlight CursorLine cterm=none    ctermbg=LightGray
+	endif
+	set nohlsearch "highlighted search is a pain
+endif
+
+
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+
+  " Put these in an autocmd group, so that we can delete them easily.
+  augroup vimrcEx
+  au!
+
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+
+  augroup END
+
+else
+
+  set autoindent " always set autoindenting on
+
+endif " has("autocmd")
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+		\ | wincmd p | diffthis
+
+set formatoptions+=b
+

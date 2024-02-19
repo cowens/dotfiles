@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+# rewrites the commandline of ag commands to be more like I want it to work
+# that is more like grep
+
+use v5.30;
+use warnings;
+
+my $path = "/usr/local/bin/ag";
+
+die "install ag\n" unless -f $path;
+
+my %replace = (
+	-x => [ "--ignore" ],
+	-h => [ "--nofilename", "--nobreak" ],
+);
+
+my @args = map { $replace{$_} ? $replace{$_}->@* : $_ } @ARGV;
+
+#say "$path ", join " ", map { s/"/\\"/; qq/"$_"/} @args;
+exec $path, @args
+

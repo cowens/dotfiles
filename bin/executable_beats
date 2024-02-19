@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $utc1 = time + 60*60;
+my ($s, $m, $h) = gmtime $utc1;
+my $beats = int(($s + ($m * 60) + ($h * 3600)) / 86.4);
+
+print "\@$beats.beats\n";

@@ -1,0 +1,32 @@
+#!/bin/zsh
+
+# turn on/off and adjust desk lamp
+
+token=$(curl -sk -X POST -H 'Content-Type: application/json' https://crab.local:8581/api/auth/login -d "$(gopass -o homebridge/office)" | jq -r .access_token)
+
+curl -sk https://crab.local:8581/api/accessories -H "Authorization: Bearer $token" | jq -r '.[] | select (.serviceName == "Desk") | [
+	.uniqueId,
+	(.serviceCharacteristics[] | select (.type == "On") | .value),
+	(.serviceCharacteristics[] | select (.type == "Brightness") | .value),
+	(.serviceCharacteristics[] | select (.type == "ColorTemperature") | .value)
+] | join(" ")' | read id on brightness temp
+
+case "$1" in
+0)
+	on=0
+	;;
+off)
+	on=0
+	;;
+[1-9]*)
+	on=1
+	brightness=$1
+	;;
+*)
+	on=1
+	;;
+esac
+
+curl -sk -X PUT https://crab.local:8581/api/accessories/$id -H "Content-Type:Application/json" -H "authorization: Bearer $token" -d '{"characteristicType": "On", "value": "'$on'"}' >/dev/null
+curl -sk -X PUT https://crab.local:8581/api/accessories/$id -H "Content-Type:Application/json" -H "authorization: Bearer $token" -d '{"characteristicType": "Brightness", "value": '$brightness'}' >/dev/null
+

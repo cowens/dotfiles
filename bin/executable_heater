@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+# turn on/off office heater
+
+token=$(curl -sk -X POST -H 'Content-Type: application/json' https://crab.local:8581/api/auth/login -d "$(gopass -o homebridge/office)" | jq -r .access_token)
+
+curl -sk https://crab.local:8581/api/accessories -H "Authorization: Bearer $token" | jq -r '.[] | select (.serviceName == "Heater") | [
+	.uniqueId,
+	(.serviceCharacteristics[] | select (.type == "On") | .value)
+] | join(" ")' | read id on
+
+case "$1" in
+off)
+	on=0
+	;;
+*)
+	on=1
+	;;
+esac
+
+curl -sk -X PUT https://crab.local:8581/api/accessories/$id -H "Content-Type:Application/json" -H "authorization: Bearer $token" -d '{"characteristicType": "On", "value": '$on'}' >/dev/null
+
