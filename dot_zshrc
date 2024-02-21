@@ -39,18 +39,6 @@ export HISTFILESIZE=1000000
 export HISTSIZE=10000
 export HISTSAVE=1000000
 
-zam() {
-	if [[ -z "$1" ]]; then
-		echo $AWS_PROFILE
-		return
-	fi
-	if grep "\[$1\]" $HOME/.aws/credentials > /dev/null; then
-		export AWS_PROFILE=$1
-	else
-		echo error $1 is not a profile
-	fi
-}
-
 if [[ "$TERM" == "xterm-kitty" ]]; then
 	export TERMINFO=/Applications/kitty.app/Contents/Resources/kitty/terminfo
 	for n in $(kitty @ ls | jq -r '.[] | .id'); do
@@ -63,5 +51,3 @@ if [[ "$TERM" == "xterm-kitty" ]]; then
 fi
 
 export WEZTERM_PID=$(ps -p $$ -oppid=)
-
-

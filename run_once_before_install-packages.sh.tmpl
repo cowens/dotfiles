@@ -33,4 +33,29 @@ EOF
 
 brew autoupdate delete
 brew autoupdate start 43200 --upgrade --cleanup --immediate --sudo
+{{- else if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+
+cd
+{{- if eq .chezmoi.hostname "penguin" }}
+ln -s /mnt/chromeos/MyFiles/Downloads downloads
+ln -s Downloads downloads
+sudo passwd cowens
+sudo chsh -s /usr/bin/zsh cowens
+{{- end }}
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y silversearcher-ag mosh build-essential lsof strace zsh wl-clipboard fd-find tmux
+
+if [[ ! -d .plenv ]]; then
+	git clone https://github.com/tokuhirom/plenv.git ~/.plenv
+	git clone https://github.com/tokuhirom/Perl-Build.git ~/.plenv/plugins/perl-build/
+	export PATH="$HOME/.plenv/bin:$PATH"
+	eval "$(plenv init - zsh)"
+	latest_perl=$(curl https://fastapi.metacpan.org/v1/release/perl | jq -r .version | perl -nle 'print join ".", grep { length } /(\d+)[.](?:00(.)|0(..)|(...))(?:00(.)|0(..)|(...))/')
+	plenv install $latest_perl
+	plenv global $latest_perl
+	plenv install-cpanm
+fi
 {{ end -}}

@@ -4,5 +4,8 @@ alias imgcat="wezterm imgcat"
 {{- if eq .chezmoi.os "darwin" }}
 alias slocate="mdfind -name"
 {{- end }}
+{{- if eq .chezmoi.os "linux" }}
+alias fd=fdfind
+{{- end }}
 alias wake="ssh w caffeinate -ut 1"
 alias dog=doggo
