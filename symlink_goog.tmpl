@@ -1,0 +1,5 @@
+{{- if eq .chezmoi.os "darwin" }}
+Google Drive
+{{- else if eq .chezmoi.hostname "penguin" -}}
+/mnt/chromeos/GoogleDrive/MyDrive
+{{- end }}

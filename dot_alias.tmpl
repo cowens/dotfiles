@@ -1,0 +1,8 @@
+alias bc="bc -l"
+alias ls="ls --color=auto"
+alias imgcat="wezterm imgcat"
+{{- if eq .chezmoi.os "darwin" }}
+alias slocate="mdfind -name"
+{{- end }}
+alias wake="ssh w caffeinate -ut 1"
+alias dog=doggo

@@ -1,0 +1,53 @@
+# new entries go on the ahead of the current path
+# so this file should add paths in reverse order
+# they should be looked up in
+
+{{if eq .chezmoi.os "darwin" -}}
+# Brew related stuff
+PATH="/usr/local/sbin:$PATH"
+PATH="/usr/local/bin:$PATH"
+
+# kitty
+PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
+
+# Java related
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export CPPFLAGS="-I/usr/local/opt/openjdk/include $CPPFLAGS"
+
+# Ruby stuff
+export LDFLAGS="-L/usr/local/opt/ruby/lib"
+export CPPFLAGS="-I/usr/local/opt/ruby/include $CPPFLAGS"
+export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/3.0.0/bin:$PATH"
+
+# mysql client
+PATH="$PATH:/usr/local/opt/mysql-client/bin"
+{{- else if and (eq .chezmoi.os "linux") (eq .chezmoi.hostname "penguin") -}}
+# snap
+PATH="/snap/bin:$PATH"
+{{- end }}
+
+# Go related
+export GOPATH=$HOME/go
+PATH="$GOPATH/bin:$PATH"
+
+# asdf related
+# source $(ls /usr/local/Cellar/asdf/*/libexec/asdf.sh)
+
+# Perl
+if which plenv > /dev/null; then
+	eval "$(plenv init - zsh)"
+fi
+
+# Ruby
+if which plenv > /dev/null; then
+	eval "$(rbenv init - zsh)"
+fi
+
+# individual, self-compiled apps, not currently using this pattern in favor
+# of brew, asdf, plenv, etc
+# for d in $HOME/apps/*/bin; do
+# 	PATH="$d:$PATH"
+# done
+
+# my personal scripts and overrides are the first place to look
+PATH="$HOME/bin:$PATH"
