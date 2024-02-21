@@ -9,7 +9,7 @@ if wezterm.target_triple:find("darwin") ~= nil then
 	macos = true
 end
 
-if wezterm.hostname == "penguin" then
+if wezterm.hostname() == "penguin" then
 	chromeos = true
 end
 
@@ -18,7 +18,7 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-wezterm.log_info("config loaded and version is " .. wezterm.version)
+wezterm.log_info("config loaded and version is " .. wezterm.version .. " macos " .. tostring(macos) .. " chromeos " .. tostring(chromeos))
 
 -- FIXME: find a better way to handle this
 config.ssh_domains = {
@@ -232,7 +232,7 @@ local keys = {
 	},
 	{ key = 's',           mods = 'LEADER', action = act.ShowLauncherArgs { flags = "WORKSPACES" }               },
 	{ key = '/',           mods = 'LEADER', action = act.Search("CurrentSelectionOrEmptyString")                 },
-	{ key = '?',           mods = 'LEADER', action = act.ShowDebugOverlay                                        },
+	{ key = 'o',    mods = 'LEADER', action = act.ShowDebugOverlay                                        },
 	{ key = 'v',           mods = 'LEADER', action = act.ActivateCopyMode                                        },
 	{ key = 'z',           mods = 'LEADER', action = act.TogglePaneZoomState                                     },
 	{ key = 'x',           mods = 'LEADER', action = act.CloseCurrentTab { confirm = true }                      },
@@ -275,7 +275,7 @@ wezterm.on('gui-startup', function(cmd)
 end)
 
 if chromeos then
-	enable_wayland=false
+	config.enable_wayland=false
 end
 
 -- and finally, return the configuration to wezterm
