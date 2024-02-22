@@ -38,9 +38,8 @@ brew autoupdate start 43200 --upgrade --cleanup --immediate --sudo
 
 cd
 {{- if eq .chezmoi.hostname "penguin" }}
-ln -s /mnt/chromeos/MyFiles/Downloads downloads
-ln -s Downloads downloads
-sudo passwd cowens
+ln -fs /mnt/chromeos/MyFiles/Downloads downloads
+ln -fs Downloads downloads
 sudo chsh -s /usr/bin/zsh cowens
 {{- end }}
 
