@@ -43,9 +43,13 @@ ln -fs Downloads downloads
 sudo chsh -s /usr/bin/zsh cowens
 {{- end }}
 
+curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+
 sudo apt update
 sudo apt upgrade -y
-sudo apt install -y silversearcher-ag mosh build-essential lsof strace zsh wl-clipboard fd-find tmux
+sudo apt install -y silversearcher-ag mosh build-essential lsof strace zsh wl-clipboard fd-find tmux wezterm
+
 
 if [[ ! -d .plenv ]]; then
 	git clone https://github.com/tokuhirom/plenv.git ~/.plenv
