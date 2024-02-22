@@ -1,28 +1,28 @@
-[".vim/pack/alker0/chezmoi.vim"]
+[".vim/pack/plugins/start/chezmoi.vim"]
     type = "git-repo"
     url = "https://github.com/alker0/chezmoi.vim.git"
     refreshPeriod = "168h"
-[".vim/pack/kien/ctrlp.vim.git"]
+[".vim/pack/plugins/start/ctrlp.vim.git"]
     type = "git-repo"
     url = "https://github.com/kien/ctrlp.vim.git"
     refreshPeriod = "168h"
-[".vim/pack/ervandew/supertab.git"]
+[".vim/pack/plugins/start/supertab.git"]
     type = "git-repo"
     url = "https://github.com/ervandew/supertab.git"
     refreshPeriod = "168h"
-[".vim/pack/godlygeek/tabular.git"]
+[".vim/pack/plugins/start/tabular.git"]
     type = "git-repo"
     url = "https://github.com/godlygeek/tabular.git"
     refreshPeriod = "168h"
-[".vim/pack/vim-scripts/tComment.git"]
+[".vim/pack/plugins/start/tComment.git"]
     type = "git-repo"
     url = "https://github.com/vim-scripts/tComment.git"
     refreshPeriod = "168h"
-[".vim/pack/vala-lang/vala.vim"]
+[".vim/pack/plugins/start/vala.vim"]
     type = "git-repo"
     url = "https://github.com/vala-lang/vala.vim"
     refreshPeriod = "168h"
-[".vim/pack/rickhowe/diffchar.vim"]
+[".vim/pack/plugins/start/diffchar.vim"]
     type = "git-repo"
     url = "https://github.com/rickhowe/diffchar.vim"
     refreshPeriod = "168h"
