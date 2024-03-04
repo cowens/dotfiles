@@ -2,10 +2,13 @@
 # so this file should add paths in reverse order
 # they should be looked up in
 
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
 {{if eq .chezmoi.os "darwin" -}}
 # Brew related stuff
 PATH="/usr/local/sbin:$PATH"
 PATH="/usr/local/bin:$PATH"
+PATH="/opt/homebrew/bin:$PATH"
 
 # kitty
 PATH="/Applications/kitty.app/Contents/MacOS:$PATH"

@@ -1,6 +1,11 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
+if ! which brew; then
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	export PATH="/opt/homebrew/bin:$PATH"
+fi
+
 brew bundle --no-lock --file=/dev/stdin <<EOF
 # homebrew extensions to autoupdate
 tap "homebrew/autoupdate"
@@ -15,6 +20,7 @@ brew "doggo"
 brew "duckdb"
 brew "fd"
 brew "gau"
+brew "gopass"
 brew "git"
 brew "jq"
 brew "markdown"
@@ -28,8 +34,13 @@ brew "tmux"
 brew "watch"
 brew "websocat"
 brew "wget"
+cask "itsycal"
+cask "karabiner-elements"
+cask "logi-options-plus"
 cask "wezterm"
 EOF
+
+mkdir -p /Users/cowens/Library/LaunchAgents
 
 brew autoupdate delete
 brew autoupdate start 43200 --upgrade --cleanup --immediate --sudo
