@@ -50,4 +50,16 @@ if [[ "$TERM" == "xterm-kitty" ]]; then
 	done
 fi
 
+if [[ -f ~/.ssh/agent ]]; then
+	eval $(cat ~/.ssh/agent) > /dev/null
+	if [[ "$(ps -p $SSH_AGENT_PID -o comm=)" != "ssh-agent" ]]; then
+		unset SSH_AGENT_PID
+	fi
+fi
+
+if [[ -z "$SSH_AGENT_PID" ]]; then
+	ssh-agent > ~/.ssh/agent
+	eval $(cat ~/.ssh/agent) > /dev/null
+fi
+
 export WEZTERM_PID=$(ps -p $$ -oppid=)
