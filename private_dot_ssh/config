@@ -1,3 +1,7 @@
+Host *
+	# I don't want keys sticking around in ssh-agent forever
+	AddkeysToAgent 1d
+
 Host github.com
 	HostName github.com
 	User git
@@ -6,22 +10,26 @@ Host github.com
 
 Host p perlish perlish.org
 	ForwardAgent yes
-	AddkeysToAgent yes
 	User cowens
 	Hostname perlish.org
 
-Host crab.local crab c
+Host crab.local crab c 192.168.1.14
 	ForwardAgent yes
-	AddkeysToAgent yes
 	User chas.owens
-	Hostname crab.local
+	Hostname 192.168.1.14
 	IdentitiesOnly yes
-	IdentityFile /Users/chas/.ssh/id_ed25519
+	IdentityFile ~/.ssh/id_ed25519
 
-Host wonkden.duckdns.org wonkden w
+Host penguin
 	ForwardAgent yes
-	AddkeysToAgent yes
-	User chas.owens
-	Hostname wonkden.duckdns.org
-	Port 6166
-	IdentityFile /Users/chas/.ssh/id_ed25519
+	User cowens
+	Hostname 100.115.92.199
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/id_ed25519
+
+Host dancer.local dancer d
+	ForwardAgent yes
+	User cowens
+	Hostname dancer.local
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/id_ed25519
