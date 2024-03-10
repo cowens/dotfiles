@@ -6,9 +6,9 @@
 use v5.30;
 use warnings;
 
-my $path = "/usr/local/bin/ag";
+my $ag = qx{which -a ag | grep -v ~/bin/ag};
 
-die "install ag\n" unless -f $path;
+die "install ag\n" unless $ag;
 
 my %replace = (
 	-x => [ "--ignore" ],
@@ -17,6 +17,6 @@ my %replace = (
 
 my @args = map { $replace{$_} ? $replace{$_}->@* : $_ } @ARGV;
 
-#say "$path ", join " ", map { s/"/\\"/; qq/"$_"/} @args;
-exec $path, @args
+#say "$ag ", join " ", map { s/"/\\"/; qq/"$_"/} @args;
+exec $ag, @args
 
