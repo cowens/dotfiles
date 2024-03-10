@@ -1,15 +1,51 @@
-alias bc="bc -l"
+### Fix the default options for commands ###
+
+# by default, bc is set to do integer math and is missing functions
+# --mathlib fixes this
+alias bc="bc --mathlib"
+
+# turn colors if the terminal supports them, COLORTERM is set, and stdout is a
+# tty
 alias ls="ls --color=auto"
+
+# I don't want ssh keys to stay in an ssh agent forever
+alias ssh-add="ssh-add -t 1d"
+
+# universal diff is the only sane format
+alias diff="diff -u"
+
+# I still have never learned to use buffers in vim well, so still sticking with
+# opening files in tabs
+alias vim="vim -g"
+
+### create new commands ###
+
+# cat images in the terminal for wezterm
 alias imgcat="wezterm imgcat"
+
+# wake up my Mac Mini, for some reason, I can't prevent the screens from going
+# to sleep and I don't have a keyboard or mouse attached directly to it (I use
+# Universal Control to use the same keyboard and mouse for my MacBook Pro and
+# Mac Mini)
+alias wake="ssh crab caffeinate -ut 1"
+
+# copy the time-based one time password for my work Okta account to the
+# clipboard. This may not last long as I am fixing Okta to use Fido2 instead.
+alias wotp="gopass otp cowens@papa.okta.com -c"
+
+### rename existing commands ###
+
 {{- if eq .chezmoi.os "darwin" }}
+# slocate and mdfind do similar things, standardize on slocate
 alias slocate="mdfind -name"
 {{- end }}
+
 {{- if eq .chezmoi.os "linux" }}
+# fdfind is a faster/better version of find
 alias fd=fdfind
 {{- end }}
-alias wake="ssh w caffeinate -ut 1"
+
+# dog was a better dig client written in Rust, but it is abandoned. Luckily,
+# doggo (written in Go) has kept roughly the same interface and is actively
+# maintained
 alias dog=doggo
-alias ssh-add="ssh-add -t 1d"
-alias wotp="gopass otp cowens@papa.okta.com -c"
-alias diff="diff -u"
-alias vim="vim -g"
