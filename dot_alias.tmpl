@@ -33,6 +33,12 @@ alias wake="ssh crab caffeinate -ut 1"
 # clipboard. This may not last long as I am fixing Okta to use Fido2 instead.
 alias wotp="gopass otp cowens@papa.okta.com -c"
 
+# make it easier to edit and apply changes to chezmoi managed files
+alias cvi='chezmoi edit -a'
+
+# make it easier to run git commands for chezmoi
+alias cgit='chezmoi git --'
+
 ### rename existing commands ###
 
 {{- if eq .chezmoi.os "darwin" }}
