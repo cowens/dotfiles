@@ -6,7 +6,7 @@
 use v5.30;
 use warnings;
 
-my $ag = qx{which -a ag | grep -v ~/bin/ag | head -1};
+chomp(my $ag = qx{which -a ag | grep -v ~/bin/ag | head -1});
 
 die "install ag\n" unless $ag;
 
