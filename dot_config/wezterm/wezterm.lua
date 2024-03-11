@@ -132,7 +132,7 @@ config.colors = {
 	},
 }
 
-config.font = wezterm.font 'Menlo'
+-- config.font = wezterm.font 'Menlo'
 
 -- FIXME: find a better way to handle this
 if macos then
@@ -140,6 +140,7 @@ if macos then
 else
 	config.font_size = 18
 end
+config.harfbuzz_features = { 'calt=1', 'zero', 'ss19', 'cv20', 'ss20'  }
 
 config.send_composed_key_when_left_alt_is_pressed = true
 config.disable_default_key_bindings = true
@@ -255,10 +256,6 @@ end
 
 config.keys = keys
 
--- config.mouse_bindings = {
--- 	{ event = { Down = { streak = 1, button = 'Right' }, mods = none, action = act.nop  },
--- 	{ event = { Up   = { streak = 1, button = 'Right' }, mods = none, action = act.  },
--- }
 wezterm.on('gui-startup', function(cmd)
 	local window_args = {}
 	if wezterm.gui.screens().by_name["LG QHD"] then
@@ -275,7 +272,16 @@ wezterm.on('gui-startup', function(cmd)
 end)
 
 if chromeos then
+	-- won't run on chromeos without this
 	config.enable_wayland=false
+	-- fix pasting
+	config.mouse_bindings = {
+		{
+			event = { Down = { streak = 1, button = 'Middle' } },
+			mods = 'NONE',
+			action = act.PasteFrom 'Clipboard'
+		},
+	}
 end
 
 -- and finally, return the configuration to wezterm
