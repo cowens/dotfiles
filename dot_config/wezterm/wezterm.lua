@@ -22,10 +22,10 @@ wezterm.log_info("config loaded and version is " .. wezterm.version .. " macos "
 
 -- FIXME: find a better way to handle this
 config.ssh_domains = {
-	{ name = 'crab', remote_address = 'crab', },
-	{ name = 'pater', remote_address = 'pater', },
-	{ name = 'penguin', remote_address = 'penguin', },
-	{ name = 'perlish', remote_address = 'perlish', remote_wezterm_path = '/home/cowens/bin/wezterm' },
+	{ name = 'crab',    remote_address = 'crab.wonkden.us',                                                     },
+	{ name = 'pater',   remote_address = 'pater.wonkden.us',                                                    },
+	{ name = 'penguin', remote_address = 'penguin.wonkden.us',                                                  },
+	{ name = 'perlish', remote_address = 'perlish',            remote_wezterm_path = '/home/cowens/bin/wezterm' },
 }
 
 config.scrollback_lines = 20000
