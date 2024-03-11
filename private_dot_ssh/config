@@ -13,17 +13,39 @@ Host p perlish perlish.org
 	User cowens
 	Hostname perlish.org
 
-Host crab.local crab c 192.168.1.14
+Host crab.local
 	ForwardAgent yes
 	User chas.owens
-	Hostname 192.168.1.14
 	IdentitiesOnly yes
 	IdentityFile ~/.ssh/id_ed25519
 
-Host penguin
+Host c crab crab.wonkden.us
+	ForwardAgent yes
+	User chas.owens
+	Hostname crab.wonkden.us
+	ProxyCommand cloudflared access ssh --hostname %h
+	IdentityFile ~/.cloudflared/%h-cf_key
+	CertificateFile ~/.cloudflared/%h-cf_key-cert.pub
+
+Host penguin penguin.wonkden.us
 	ForwardAgent yes
 	User cowens
-	Hostname 100.115.92.199
+	Hostname penguin.wonkden.us
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/id_ed25519
+	ProxyCommand cloudflared access ssh --hostname %h
+
+Host pater pater.wonkden.us
+	ForwardAgent yes
+	User cowens
+	Hostname pater.wonkden.us
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/id_ed25519
+	ProxyCommand cloudflared access ssh --hostname %h
+
+Host pater.local
+	ForwardAgent yes
+	User cowens
 	IdentitiesOnly yes
 	IdentityFile ~/.ssh/id_ed25519
 
