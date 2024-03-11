@@ -23,7 +23,8 @@ wezterm.log_info("config loaded and version is " .. wezterm.version .. " macos "
 -- FIXME: find a better way to handle this
 config.ssh_domains = {
 	{ name = 'crab', remote_address = 'crab', },
-	{ name = 'wonkden', remote_address = 'wonkden', },
+	{ name = 'pater', remote_address = 'pater', },
+	{ name = 'penguin', remote_address = 'penguin', },
 	{ name = 'perlish', remote_address = 'perlish', remote_wezterm_path = '/home/cowens/bin/wezterm' },
 }
 
